@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,7 +49,7 @@ public class CustomerController {
      * @return ResponseEntity of customer
      */
     @PostMapping("/")
-    public ResponseEntity<Customer> createCustomer(@RequestBody CustomerRequest customerRequest) {
+    public ResponseEntity<Customer> createCustomer(@RequestBody CustomerRequest customerRequest, @RequestHeader(value = "Authorization", required = false) String token) {
         log.debug("Calling CustomerController.createCustomer {}", customerRequest);
         return ResponseEntity.status(CREATED).body(customerService.createCustomer(customerRequest));
     }

@@ -36,7 +36,7 @@ public class CustomerControllerTest {
         Customer customer = CustomerData.getCustomer();
 
         when(customerService.createCustomer(any(CustomerRequest.class))).thenReturn(customer);
-        customerController.createCustomer(customerRequest);
+        customerController.createCustomer(customerRequest, null);
 
         assertEquals(customer.getId(), 1L);
         assertEquals(customer.getName(), customerRequest.getName());

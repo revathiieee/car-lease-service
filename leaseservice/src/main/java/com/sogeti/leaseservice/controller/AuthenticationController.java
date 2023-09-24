@@ -2,22 +2,19 @@ package com.sogeti.leaseservice.controller;
 
 import com.sogeti.leaseservice.dto.AuthenticationDTO;
 import com.sogeti.leaseservice.dto.AuthenticationResponse;
-import com.sogeti.leaseservice.service.UserDetailsServiceImpl;
+import com.sogeti.leaseservice.repository.UserRepository;
 import com.sogeti.leaseservice.util.JwtUtil;
+import com.sogeti.leaseservice.util.TokenGenerator;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.io.IOException;
 
 /**
  * The type Authentication controller.
@@ -25,7 +22,7 @@ import java.io.IOException;
  * @Author revathi
  */
 @RestController
-@RequestMapping("/api")
+@Slf4j
 public class AuthenticationController {
 
     /**
@@ -38,42 +35,29 @@ public class AuthenticationController {
      * The Authentication manager.
      */
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private TokenGenerator tokenGenerator;
 
     /**
      * The User details service.
      */
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    private UserRepository userRepository;
 
     /**
-     * Create authentication token authentication response.
-     * This method is used to authenticate the user
-     * @param authenticationDTO the authentication dto
-     * @param response          the response
-     * @return the authentication response
-     * @throws BadCredentialsException    the bad credentials exception
-     * @throws DisabledException          the disabled exception
-     * @throws UsernameNotFoundException the username not found exception
-     * @throws IOException                the io exception
+     * Create authentication token response entity.
+     * @param authenticationDTO
+     * @return AuthenticationResponse
      */
     @PostMapping("/authenticate")
-    public AuthenticationResponse createAuthenticationToken(@RequestBody AuthenticationDTO authenticationDTO, HttpServletResponse response) throws BadCredentialsException, DisabledException, UsernameNotFoundException, IOException {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationDTO.getEmail(), authenticationDTO.getPassword()));
-        } catch (BadCredentialsException e) {
-            throw new BadCredentialsException("Incorrect username or password!");
-        } catch (DisabledException disabledException) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "User is not activated");
-            return null;
+    public ResponseEntity<AuthenticationResponse> createAuthenticationToken(@RequestBody AuthenticationDTO authenticationDTO) {
+
+        var user = userRepository.findFirstByEmail(authenticationDTO.getEmail());
+        log.debug("User: {}", user);
+        if (user != null && jwtUtil.matchHash(authenticationDTO.getPassword(), user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.OK).body(tokenGenerator.generateToken(user));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationDTO.getEmail());
-
-        final String jwt = jwtUtil.generateToken(userDetails.getUsername());
-
-        return new AuthenticationResponse(jwt);
-
     }
 
 }

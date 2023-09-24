@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: customer-service
+  cloud:
+    discovery:
+        enabled: false
+    config:
+        enabled: false
+        discovery:
+            enabled: false
+  datasource:
+    url: jdbc:h2:mem:cusdb
+    driverClassName: org.h2.Driver
+    username: user
+    password: tempuser
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true

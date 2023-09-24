@@ -44,7 +44,7 @@ public class LeaseController {
      * @return the response entity
      */
     @PostMapping("/")
-    public ResponseEntity<LeaseContractData> leaseDetails(@RequestBody LeaseRequest leaseRequest, @RequestHeader(value = "Authorization", required = false) String token) {
+    public ResponseEntity<LeaseContractData> leaseDetails(@RequestBody LeaseRequest leaseRequest, @RequestHeader(value = "Authorization") String token) {
         log.info("Calling leaseService.getCustomerById {}", leaseRequest.getCustomerId());
         return ResponseEntity.status(HttpStatus.OK).body(leaseService.getCustomerById(leaseRequest, token));
     }

@@ -15,6 +15,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<springdoc.version>2.0.3</springdoc.version>
+		<jwt.version>9.30.2</jwt.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -57,6 +58,11 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.nimbusds</groupId>
+			<artifactId>nimbus-jose-jwt</artifactId>
+			<version>${jwt.version}</version>
 		</dependency>
 	</dependencies>
 
