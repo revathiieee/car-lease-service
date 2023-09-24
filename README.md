@@ -67,9 +67,9 @@ Implement a REST service which receives the car lease contract information for t
 ### Swagger UI
 | Service Name | URL |
 | --- | --- |
-| Customer Service | http://<customer-service>:8091/swagger-ui/index.html |
-| Car Service | http://<car-service>:8092/swagger-ui/index.html |
-| Lease Service | http://<lease-service>:8093/swagger-ui.html |
+| Customer Service | http://customer-service:8091/swagger-ui/index.html |
+| Car Service | http://car-service:8092/swagger-ui/index.html |
+| Lease Service | http://lease-service:8093/swagger-ui.html |
 
 ### Gateway Service
 | Service Name | URL |
