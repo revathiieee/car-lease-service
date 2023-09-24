@@ -108,7 +108,7 @@ Implement a REST service which receives the car lease contract information for t
 * Add docker compose file to run all services
 * Add Integration test cases. Note: I have added integration test for customer service.
 
-###Euereka Server
+### Eureka Server
 
 ![Eureka Server](eureka-registry.png)
 
