@@ -1,0 +1,2 @@
+insert into users (id, email, name, password) values (1,'admin@lease.com', 'admin', '$2a$10$h9DjsxushmrJ/xcE2ygSJOkgoBOUKgnqxRDEL1r85/9HxgzF8qkXW');
+insert into users (id, email, name, password) values (2,'broker@lease.com', 'broker', '$2a$10$kvvkJijYqlRsvpkttJHUfeBkM7V9Pxj7EefLZb.3Kjm8HuE/FO8Fi');
