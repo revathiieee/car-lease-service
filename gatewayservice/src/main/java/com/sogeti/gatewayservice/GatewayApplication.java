@@ -38,10 +38,6 @@ public class GatewayApplication {
 		groups.add(GroupedOpenApi.builder().pathsToMatch("customers").group("customers").build());
 		groups.add(GroupedOpenApi.builder().pathsToMatch("cars").group("cars").build());
 		groups.add(GroupedOpenApi.builder().pathsToMatch("lease").group("lease").build());
-//		definitions.stream().filter(routeDefinition -> routeDefinition.getId().matches(".*-service")).forEach(routeDefinition -> {
-//			String name = routeDefinition.getId().replaceAll("-service", "");
-//			groups.add(GroupedOpenApi.builder().pathsToMatch("/" + name + "/**").group(name).build());
-//		});
 		return groups;
 	}
 }
