@@ -1,5 +1,6 @@
 package com.sogeti.leaseservice.client;
 
+import com.sogeti.leaseservice.exception.TechnicalException;
 import com.sogeti.leaseservice.swagger.customer.model.Customer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,9 +52,15 @@ public class CustomerClient extends RestClient {
      * @return Customer
      */
     public Customer getCustomerById(Long id, String token) {
+        Customer customer = null;
         HttpHeaders headers = createHeaders(token);
-        Customer customer = doGet(SERVICE_NAME, "getCustomerById", id, headers, Customer.class);
-        log.debug("CustomerClient Customer: {}", customer);
+        try {
+            customer = doGet(SERVICE_NAME, "getCustomerById", id, headers, Customer.class);
+            log.debug("CustomerClient Customer: {}", customer);
+        } catch (TechnicalException e) {
+            log.error("Error while getting customer details {}", e.getMessage());
+            throw new TechnicalException("Error calling customer service");
+        }
         return customer;
     }
 

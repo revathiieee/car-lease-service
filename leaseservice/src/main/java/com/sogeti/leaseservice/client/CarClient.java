@@ -1,5 +1,6 @@
 package com.sogeti.leaseservice.client;
 
+import com.sogeti.leaseservice.exception.TechnicalException;
 import com.sogeti.leaseservice.swagger.car.model.LeaseRateResponse;
 import com.sogeti.leaseservice.swagger.car.model.LeaseRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -52,14 +53,21 @@ public class CarClient extends RestClient {
      * @return LeaseRateResponse
      */
     public LeaseRateResponse getLeaseRate(com.sogeti.leaseservice.dto.LeaseRequest leaseRequest, String token) {
+        LeaseRateResponse leaseRateResponse = null;
         HttpHeaders headers = createHeaders(token);
         LeaseRequest lreq = new LeaseRequest();
         lreq.setId(leaseRequest.getCarId());
         lreq.setMileage(leaseRequest.getMileage());
         lreq.setInterestRate(leaseRequest.getInterestRate());
         lreq.setDurationInMonths(leaseRequest.getDurationInMonths());
-        LeaseRateResponse leaseRateResponse = doPost(SERVICE_NAME, "LeaseRate", lreq, headers, LeaseRateResponse.class);
-        log.debug("CarClient LeaseRateResponse: {}", leaseRateResponse);
+        try {
+            leaseRateResponse = doPost(SERVICE_NAME, "LeaseRate", lreq, headers, LeaseRateResponse.class);
+            log.debug("CarClient LeaseRateResponse: {}", leaseRateResponse);
+        } catch (TechnicalException e) {
+            log.error("Error while getting car details {}", e.getMessage());
+            throw new TechnicalException("Error calling car service");
+        }
+
         return leaseRateResponse;
     }
 

@@ -4,9 +4,11 @@ import com.sogeti.leaseservice.client.CarClient;
 import com.sogeti.leaseservice.client.CustomerClient;
 import com.sogeti.leaseservice.dto.LeaseContractData;
 import com.sogeti.leaseservice.dto.LeaseRequest;
+import com.sogeti.leaseservice.exception.TechnicalException;
 import com.sogeti.leaseservice.swagger.car.model.LeaseRateResponse;
 import com.sogeti.leaseservice.swagger.customer.model.Customer;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -35,6 +37,7 @@ public class LeaseServiceImpl {
      * @param customerClient the customer client
      * @param carClient      the car client
      */
+    @Autowired
     public LeaseServiceImpl(CustomerClient customerClient, CarClient carClient) {
         this.customerClient = customerClient;
         this.carClient = carClient;
@@ -50,11 +53,16 @@ public class LeaseServiceImpl {
     public LeaseContractData getCustomerById(LeaseRequest leaseRequest, String token) {
         log.info("Calling LeaseServiceImpl.customerId {} and carId {}", leaseRequest.getCustomerId(), leaseRequest.getCarId());
         LeaseContractData leaseContractData = new LeaseContractData();
-        Customer customer = customerClient.getCustomerById(leaseRequest.getCustomerId(), token);
-        LeaseRateResponse leaseRateResponse = carClient.getLeaseRate(leaseRequest, token);
-        leaseContractData.setCustomer(customer);
-        leaseContractData.setLeaseRateResponse(leaseRateResponse);
-        log.debug("LeaseContractData: {}", leaseContractData);
+        try {
+            Customer customer = customerClient.getCustomerById(leaseRequest.getCustomerId(), token);
+            LeaseRateResponse leaseRateResponse = carClient.getLeaseRate(leaseRequest, token);
+            leaseContractData.setCustomer(customer);
+            leaseContractData.setLeaseRateResponse(leaseRateResponse);
+            log.debug("LeaseContractData: {}", leaseContractData);
+        } catch (Exception e) {
+            log.error("Error in LeaseServiceImpl {}", e.getMessage());
+            throw new TechnicalException("Error while getting lease contract data");
+        }
         return leaseContractData;
     }
 }
