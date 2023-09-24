@@ -1,4 +1,4 @@
-package util;
+package com.sogeti.carservice.util;
 
 import com.sogeti.carservice.model.Car;
 import com.sogeti.carservice.model.LeaseData;

@@ -1,10 +1,10 @@
 server:
-  port: 8093
+  port: 8080
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://discovery-service:8761/eureka/
 spring:
   application:
     name: lease-service
@@ -24,10 +24,10 @@ spring:
       password: user
 
 carservice:
-  url: http://localhost:8060/cars/leaserate
+  url: http://car-service/cars/leaserate
 
 customerservice:
-  url: http://localhost:8060/customers
+  url: http://customer-service/customers
 
 springdoc:
   swagger-ui:

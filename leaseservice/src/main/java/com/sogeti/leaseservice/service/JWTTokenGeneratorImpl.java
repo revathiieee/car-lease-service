@@ -20,7 +20,7 @@ public class JWTTokenGeneratorImpl implements TokenGenerator {
   @Override
   public AuthenticationResponse generateToken(User user) {
     try {
-      JWSSigner signer = new MACSigner("imasecretimasecretimasecretimasecret".getBytes(StandardCharsets.UTF_8));
+      JWSSigner signer = new MACSigner("carmanagementsecretkeyforjwttoken".getBytes(StandardCharsets.UTF_8));
 
       JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
           .subject(user.getEmail())

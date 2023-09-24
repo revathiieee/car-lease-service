@@ -10,8 +10,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sogeti.customerservice.model.request.CustomerRequest;
 import com.sogeti.customerservice.util.CustomerData;
 import java.util.ArrayList;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -36,7 +38,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @AutoConfigureMockMvc(addFilters = false)
-public class CustomerController2Test {
+@TestMethodOrder(OrderAnnotation.class)
+public class CustomerControllerIntegrationTest {
 
   @Autowired
   private MockMvc mvc;
@@ -45,8 +48,7 @@ public class CustomerController2Test {
 
   @Test
   @Order(1)
-  @Sql(statements = "DELETE FROM customer WHERE id='1'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-  public void getAllCustomers() throws Exception {
+  public void testGetAllCustomers() throws Exception {
     mvc.perform(get("/customers/").accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -72,6 +74,7 @@ public class CustomerController2Test {
 
   @Test
   @Order(2)
+  @Sql(statements = "DELETE FROM customer WHERE id='1'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
   public void testGetCustomerById() throws Exception {
     mvc.perform(get("/customers/1").accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
@@ -86,34 +89,36 @@ public class CustomerController2Test {
         .andExpect(jsonPath("$.phoneNumber").value("123456"));
   }
 
-//  @Test
-//  public void testCreateCustomer() throws Exception {
-//    CustomerRequest customerRequest = CustomerData.getCustomerRequest();
-//    customerRequest.setName("Peter");
-//    mvc.perform(MockMvcRequestBuilders
-//            .post("/customers")
-//            .content(asJsonString(customerRequest))
-//            .contentType(MediaType.APPLICATION_JSON)
-//            .accept(MediaType.APPLICATION_JSON))
-//        .andExpect(status().isCreated())
-//        .andExpect(MockMvcResultMatchers.jsonPath("$.name").exists());
-//  }
+  @Test
+  @Order(3)
+  @Sql(statements = "DELETE FROM customer WHERE id='1'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+  public void testCreateCustomer() throws Exception {
+    jdbcTemplate.update("truncate table customer");
+    CustomerRequest customerRequest = CustomerData.getCustomerRequest();
+    customerRequest.setName("Peter");
+    mvc.perform(MockMvcRequestBuilders
+            .post("/customers/")
+            .content(asJsonString(customerRequest))
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isCreated())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.name").exists());
+  }
 
-//  @Test
-//  @Sql(statements = "INSERT INTO customer(id, name, street, house_number, postal_code, city, email, phone_number) VALUES (3, 'johny', 'Amest', '103', '2344HG', 'DG', 'john@test.com', '123456')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-//  @Sql(statements = "DELETE FROM customer WHERE id='3'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-//  public void testUpdateCustomer() throws Exception {
-//    CustomerRequest customerRequest = CustomerData.getCustomerRequest();
-//    customerRequest.setPhoneNumber("0612345678");
-//    customerRequest.setName("Peter");
-//    mvc.perform(MockMvcRequestBuilders
-//            .post("/customers/3")
-//            .content(asJsonString(customerRequest))
-//            .contentType(MediaType.APPLICATION_JSON)
-//            .accept(MediaType.APPLICATION_JSON))
-//        .andExpect(status().isOk())
-//        .andExpect(MockMvcResultMatchers.jsonPath("$.name").exists());
-//  }
+  @Test
+  @Order(4)
+  public void testUpdateCustomer() throws Exception {
+    CustomerRequest customerRequest = CustomerData.getCustomerRequest();
+    customerRequest.setPhoneNumber("0612345678");
+    customerRequest.setName("Peter");
+    mvc.perform(MockMvcRequestBuilders
+            .put("/customers/1")
+            .content(asJsonString(customerRequest))
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.name").exists());
+  }
 
   public static String asJsonString(final Object obj) {
     try {
@@ -122,6 +127,4 @@ public class CustomerController2Test {
       throw new RuntimeException(e);
     }
   }
-
-
 }

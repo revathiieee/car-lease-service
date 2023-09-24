@@ -1,5 +1,6 @@
 package com.sogeti.customerservice.model;
 
+import static jakarta.persistence.GenerationType.AUTO;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 import jakarta.persistence.Column;

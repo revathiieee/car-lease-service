@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,16 +37,16 @@ public class CustomerControllerTest {
         Customer customer = CustomerData.getCustomer();
 
         when(customerService.createCustomer(any(CustomerRequest.class))).thenReturn(customer);
-        customerController.createCustomer(customerRequest, null);
-
-        assertEquals(customer.getId(), 1L);
-        assertEquals(customer.getName(), customerRequest.getName());
-        assertEquals(customer.getStreet(), customerRequest.getStreet());
-        assertEquals(customer.getHouseNumber(), customerRequest.getHouseNumber());
-        assertEquals(customer.getPostalCode(), customerRequest.getPostalCode());
-        assertEquals(customer.getCity(), customerRequest.getCity());
-        assertEquals(customer.getEmail(), customerRequest.getEmail());
-        assertEquals(customer.getPhoneNumber(), customerRequest.getPhoneNumber());
+        ResponseEntity<Customer> cusRes = customerController.createCustomer(customerRequest, null);
+        assertEquals(cusRes.getStatusCodeValue(), 201);
+        assertEquals(cusRes.getBody().getId(), 1L);
+        assertEquals(cusRes.getBody().getName(), customerRequest.getName());
+        assertEquals(cusRes.getBody().getStreet(), customerRequest.getStreet());
+        assertEquals(cusRes.getBody().getHouseNumber(), customerRequest.getHouseNumber());
+        assertEquals(cusRes.getBody().getPostalCode(), customerRequest.getPostalCode());
+        assertEquals(cusRes.getBody().getCity(), customerRequest.getCity());
+        assertEquals(cusRes.getBody().getEmail(), customerRequest.getEmail());
+        assertEquals(cusRes.getBody().getPhoneNumber(), customerRequest.getPhoneNumber());
     }
 
     @Test
@@ -61,15 +62,16 @@ public class CustomerControllerTest {
         CustomerRequest customerRequest = CustomerData.getCustomerRequest();
         Customer customer = CustomerData.getCustomer();
         when(customerService.getCustomerById(any(Long.class))).thenReturn(customer);
-        customerController.getCustomerById(1L);
-        assertEquals(customer.getId(), 1L);
-        assertEquals(customer.getName(), customerRequest.getName());
-        assertEquals(customer.getStreet(), customerRequest.getStreet());
-        assertEquals(customer.getHouseNumber(), customerRequest.getHouseNumber());
-        assertEquals(customer.getPostalCode(), customerRequest.getPostalCode());
-        assertEquals(customer.getCity(), customerRequest.getCity());
-        assertEquals(customer.getEmail(), customerRequest.getEmail());
-        assertEquals(customer.getPhoneNumber(), customerRequest.getPhoneNumber());
+        ResponseEntity<Customer> cusRes = customerController.getCustomerById(1L);
+        assertEquals(cusRes.getStatusCodeValue(), 200);
+        assertEquals(cusRes.getBody().getId(), 1L);
+        assertEquals(cusRes.getBody().getName(), customerRequest.getName());
+        assertEquals(cusRes.getBody().getStreet(), customerRequest.getStreet());
+        assertEquals(cusRes.getBody().getHouseNumber(), customerRequest.getHouseNumber());
+        assertEquals(cusRes.getBody().getPostalCode(), customerRequest.getPostalCode());
+        assertEquals(cusRes.getBody().getCity(), customerRequest.getCity());
+        assertEquals(cusRes.getBody().getEmail(), customerRequest.getEmail());
+        assertEquals(cusRes.getBody().getPhoneNumber(), customerRequest.getPhoneNumber());
     }
 
 
@@ -82,16 +84,16 @@ public class CustomerControllerTest {
         Customer customer = CustomerData.getCustomer();
         customer.setStreet("Main Street 2");
         when(customerService.updateCustomer(any(Long.class), any(CustomerRequest.class))).thenReturn(customer);
-        customerController.updateCustomer(1L, customerRequest);
-
-        assertEquals(customer.getId(), 1L);
-        assertEquals(customer.getName(), customerRequest.getName());
-        assertEquals(customer.getStreet(), customerRequest.getStreet());
-        assertEquals(customer.getHouseNumber(), customerRequest.getHouseNumber());
-        assertEquals(customer.getPostalCode(), customerRequest.getPostalCode());
-        assertEquals(customer.getCity(), customerRequest.getCity());
-        assertEquals(customer.getEmail(), customerRequest.getEmail());
-        assertEquals(customer.getPhoneNumber(), customerRequest.getPhoneNumber());
+        ResponseEntity<Customer> cusRes = customerController.updateCustomer(1L, customerRequest);
+        assertEquals(cusRes.getStatusCodeValue(), 200);
+        assertEquals(cusRes.getBody().getId(), 1L);
+        assertEquals(cusRes.getBody().getName(), customerRequest.getName());
+        assertEquals(cusRes.getBody().getStreet(), customerRequest.getStreet());
+        assertEquals(cusRes.getBody().getHouseNumber(), customerRequest.getHouseNumber());
+        assertEquals(cusRes.getBody().getPostalCode(), customerRequest.getPostalCode());
+        assertEquals(cusRes.getBody().getCity(), customerRequest.getCity());
+        assertEquals(cusRes.getBody().getEmail(), customerRequest.getEmail());
+        assertEquals(cusRes.getBody().getPhoneNumber(), customerRequest.getPhoneNumber());
     }
 
     @Test

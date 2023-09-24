@@ -2,7 +2,7 @@ create schema if not exists cusdb;
 use cusdb;
 create table if not exists customer
 (
-    id          int auto_increment primary key,
+    id  int auto_increment primary key,
     name   varchar(30),
     street      varchar(30),
     house_number varchar(30),

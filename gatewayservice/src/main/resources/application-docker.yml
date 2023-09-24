@@ -15,17 +15,17 @@ spring:
           enabled: true
       routes:
         - id: customer-service
-          uri: lb://CUSTOMER-SERVICE
+          uri: http://mbp-van-mac.home:8091/customers
           predicates:
             - Path=/customers/**, /openapi/**, /customer-api-docs/**
         - id: cars-service
-          uri: lb://CAR-SERVICE
+          uri: http://mbp-van-mac.home:8092/cars
           predicates:
             - Path=/cars/**
         - id: lease-service
-          uri: lb://LEASE-SERVICE
+          uri: http://mbp-van-mac.home:8093/api
           predicates:
-            - Path=/lease/**
+            - Path=/api/**
         - id: openapi
           uri: http://localhost:${server.port}
           predicates:
@@ -34,7 +34,7 @@ spring:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://discovery-service:8761/eureka/
 
 springdoc:
   swagger-ui:

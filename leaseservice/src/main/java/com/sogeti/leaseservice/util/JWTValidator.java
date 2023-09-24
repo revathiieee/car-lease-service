@@ -18,7 +18,7 @@ public class JWTValidator {
   public boolean isValid(String jwt) {
     try {
       var sJwt = SignedJWT.parse(jwt);
-      JWSVerifier verifier = new MACVerifier("imasecretimasecretimasecretimasecret".getBytes(StandardCharsets.UTF_8));
+      JWSVerifier verifier = new MACVerifier("carmanagementsecretkeyforjwttoken".getBytes(StandardCharsets.UTF_8));
       // verify validity
       if (sJwt.verify(verifier)) {
         log.debug("JWT has valid signature");

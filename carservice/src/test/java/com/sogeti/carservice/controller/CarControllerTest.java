@@ -11,7 +11,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.List;
-import util.CarData;
+import org.springframework.http.ResponseEntity;
+import com.sogeti.carservice.util.CarData;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,16 +37,16 @@ public class CarControllerTest {
 
         Car car = CarData.getCarData();
         when(carService.createCar(any(CarRequest.class))).thenReturn(car);
-        carController.createCar(carRequest);
-
-        assertEquals(car.getId(), 1L);
-        assertEquals(car.getMake(), "Audi");
-        assertEquals(car.getModel(), "A4");
-        assertEquals(car.getVersion(), "2023");
-        assertEquals(car.getCo2Emission(), "Emission");
-        assertEquals(car.getNoOfDoors(), 4);
-        assertEquals(car.getGrossPrice(), new BigDecimal(30000));
-        assertEquals(car.getNetPrice(), new BigDecimal(30000));
+        ResponseEntity<Car> carRes = carController.createCar(carRequest);
+        assertEquals(carRes.getStatusCodeValue(), 201);
+        assertEquals(carRes.getBody().getId(), 1L);
+        assertEquals(carRes.getBody().getMake(), "Audi");
+        assertEquals(carRes.getBody().getModel(), "A4");
+        assertEquals(carRes.getBody().getVersion(), "2023");
+        assertEquals(carRes.getBody().getCo2Emission(), "Emission");
+        assertEquals(carRes.getBody().getNoOfDoors(), 4);
+        assertEquals(carRes.getBody().getGrossPrice(), new BigDecimal(30000));
+        assertEquals(carRes.getBody().getNetPrice(), new BigDecimal(30000));
     }
 
     @Test
@@ -63,32 +64,34 @@ public class CarControllerTest {
 
         Car car = CarData.getCarData();
         when(carService.getCarById(any(Long.class))).thenReturn(car);
-        carController.getCarById(1L);
-
-        assertEquals(car.getId(), 1L);
-        assertEquals(car.getMake(), carRequest.getMake());
-        assertEquals(car.getModel(), carRequest.getModel());
-        assertEquals(car.getVersion(), carRequest.getVersion());
-        assertEquals(car.getCo2Emission(), carRequest.getCo2Emission());
-        assertEquals(car.getNoOfDoors(), carRequest.getNoOfDoors());
-        assertEquals(car.getGrossPrice(), carRequest.getGrossPrice());
-        assertEquals(car.getNetPrice(), carRequest.getNetPrice());
+        ResponseEntity<Car> carRes = carController.getCarById(1L);
+        assertEquals(carRes.getStatusCodeValue(), 200);
+        assertEquals(carRes.getBody().getId(), 1L);
+        assertEquals(carRes.getBody().getMake(), carRequest.getMake());
+        assertEquals(carRes.getBody().getModel(), carRequest.getModel());
+        assertEquals(carRes.getBody().getVersion(), carRequest.getVersion());
+        assertEquals(carRes.getBody().getCo2Emission(), carRequest.getCo2Emission());
+        assertEquals(carRes.getBody().getNoOfDoors(), carRequest.getNoOfDoors());
+        assertEquals(carRes.getBody().getGrossPrice(), carRequest.getGrossPrice());
+        assertEquals(carRes.getBody().getNetPrice(), carRequest.getNetPrice());
     }
 
     @Test
     public void testUpdateCar() {
         CarRequest carRequest = CarData.getCarRequest();
+        carRequest.setMake("BMW3");
         Car car = CarData.getCarData();
-
-        carController.updateCar(1L, carRequest);
-        assertEquals(car.getId(), 1L);
-        assertEquals(car.getMake(), carRequest.getMake());
-        assertEquals(car.getModel(), carRequest.getModel());
-        assertEquals(car.getVersion(), carRequest.getVersion());
-        assertEquals(car.getCo2Emission(), carRequest.getCo2Emission());
-        assertEquals(car.getNoOfDoors(), carRequest.getNoOfDoors());
-        assertEquals(car.getGrossPrice(), carRequest.getGrossPrice());
-        assertEquals(car.getNetPrice(), carRequest.getNetPrice());
+        car.setMake("BMW3");
+        when(carService.updateCar(eq(1L), any(CarRequest.class))).thenReturn(car);
+        ResponseEntity<Car> carRes = carController.updateCar(1L, carRequest);
+        assertEquals(carRes.getBody().getId(), 1L);
+        assertEquals(carRes.getBody().getMake(), carRequest.getMake());
+        assertEquals(carRes.getBody().getModel(), carRequest.getModel());
+        assertEquals(carRes.getBody().getVersion(), carRequest.getVersion());
+        assertEquals(carRes.getBody().getCo2Emission(), carRequest.getCo2Emission());
+        assertEquals(carRes.getBody().getNoOfDoors(), carRequest.getNoOfDoors());
+        assertEquals(carRes.getBody().getGrossPrice(), carRequest.getGrossPrice());
+        assertEquals(carRes.getBody().getNetPrice(), carRequest.getNetPrice());
     }
 
     @Test

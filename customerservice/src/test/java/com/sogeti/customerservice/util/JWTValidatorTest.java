@@ -22,7 +22,7 @@ public class JWTValidatorTest {
   private String validJWT;
   @BeforeEach
   private void init() throws JOSEException {
-    secret = "imasecretimasecretimasecretimasecret";
+    secret = "carmanagementsecretkeyforjwttoken";
     JWSSigner signer = new MACSigner(secret.getBytes(StandardCharsets.UTF_8));
 
     JWTClaimsSet claimsSet =

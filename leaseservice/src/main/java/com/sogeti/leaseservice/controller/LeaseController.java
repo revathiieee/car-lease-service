@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
  * @Author revathi
  */
 @RestController
-@RequestMapping("/lease")
 @Slf4j
 public class LeaseController {
 
@@ -43,7 +42,7 @@ public class LeaseController {
      * @param token        the token
      * @return the response entity
      */
-    @PostMapping("/")
+    @PostMapping("/lease")
     public ResponseEntity<LeaseContractData> leaseDetails(@RequestBody LeaseRequest leaseRequest, @RequestHeader(value = "Authorization") String token) {
         log.info("Calling leaseService.getCustomerById {}", leaseRequest.getCustomerId());
         return ResponseEntity.status(HttpStatus.OK).body(leaseService.getCustomerById(leaseRequest, token));

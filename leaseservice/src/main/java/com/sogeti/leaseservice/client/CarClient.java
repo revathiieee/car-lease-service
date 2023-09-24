@@ -78,7 +78,7 @@ public class CarClient extends RestClient {
      */
     private HttpHeaders createHeaders(String token) {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + token);
+        headers.set("Authorization", token);
         return headers;
     }
 

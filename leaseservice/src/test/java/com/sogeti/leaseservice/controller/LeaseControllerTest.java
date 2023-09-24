@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 
 @ExtendWith(MockitoExtension.class)
 public class LeaseControllerTest {
@@ -68,8 +69,10 @@ public class LeaseControllerTest {
     lease.setLeaseRateResponse(leaseRateResponse);
 
     when(leaseService.getCustomerById(leaseRequest, "sometoken")).thenReturn(lease);
-    leaseController.leaseDetails(leaseRequest, "sometoken");
-    assertEquals(lease.getCustomer().getId(), 1L);
+    ResponseEntity<LeaseContractData> leaseRes = leaseController.leaseDetails(leaseRequest, "sometoken");
+    assertEquals(leaseRes.getStatusCodeValue(), 200);
+    assertEquals(leaseRes.getBody().getLeaseRateResponse().getLeaseRate(), new BigDecimal("345.7"));
+    assertEquals(leaseRes.getBody().getCustomer().getId(), 1L);
   }
 
 }
